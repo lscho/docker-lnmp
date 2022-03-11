@@ -1,0 +1,40 @@
+version: '3'
+services:
+  nginx:
+    build: ./nginx
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    links:
+      - "phpfpm"
+    volumes:
+      - ./www:/var/www/html
+      - ./nginx/conf:/etc/nginx/conf.d
+  phpfpm:
+    build: ./phpfpm
+    restart: always
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./www:/var/www/html
+    links:
+      - "mysql"
+      - "redis"
+  mysql:
+    build: ./mysql
+    restart: always
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD : 123456
+  redis:
+    build: ./redis
+    ports:
+      - "6379:6379"
+    restart: always
+    command: "redis-server --appendonly yes"
+    volumes:
+      - "./redis/data:/data"

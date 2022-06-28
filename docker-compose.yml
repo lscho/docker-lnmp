@@ -1,6 +1,7 @@
 version: '3'
 services:
   nginx:
+    container_name: nginx
     build: ./nginx
     restart: always
     ports:
@@ -12,6 +13,7 @@ services:
       - ./www:/var/www/html
       - ./nginx/conf:/etc/nginx/conf.d
   phpfpm:
+    container_name: phpfpm
     build: ./phpfpm
     restart: always
     ports:
@@ -22,15 +24,18 @@ services:
       - "mysql"
       - "redis"
   mysql:
+    container_name: mysql
     build: ./mysql
     restart: always
     ports:
       - "3306:3306"
     volumes:
       - ./mysql/data:/var/lib/mysql
+      - ./mysql/conf:/etc/mysql/
     environment:
       MYSQL_ROOT_PASSWORD : 123456
   redis:
+    container_name: redis
     build: ./redis
     ports:
       - "6379:6379"
